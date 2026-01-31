@@ -1,0 +1,5 @@
+초음파 이미지(의료영상) 처리에서 unet이 가장 psnr, snr에 좋다는 걸 보여주는 수준으로
+https://www.sciencedirect.com/science/article/abs/pii/S0895611122000465
+https://cubdl.jhu.edu/wp-content/uploads/2020/10/Li_IUS_CUBDL_Proceeding.pdf
+https://www.sciencedirect.com/science/article/abs/pii/S030156292200432X
+https://www.nature.com/articles/s41598-025-10220-w
