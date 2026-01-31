@@ -18,6 +18,9 @@
 % 2017-08-25
 %   point spread function
 %
+% 2025-01-31
+%   Modified: replaced padarray with basic MATLAB functions (no Image Processing Toolbox needed)
+%
 function [stRcvData] = GenRFdata(stTrans, stTx, stScat, bPlot)
  
      sVersion = '2.6';
@@ -241,8 +244,10 @@ function [stRcvData] = GenRFdata(stTrans, stTx, stScat, bPlot)
             [mRF, nStartTime] = calc_scat_multi(pTxTransducer, pRxTransducer, stScat.mScatXYZPos, stScat.aScatMag);    
 
             %%% Zero-padding (so that the first sample is captured at t = 0)
+            %%% Modified: replaced padarray with basic MATLAB (no Image Processing Toolbox)
             nPadLen = round(nStartTime/dt);
-            mRF_pad = padarray(mRF,[nPadLen 0],'pre');
+            % mRF_pad = padarray(mRF,[nPadLen 0],'pre');  % Original (requires Image Processing Toolbox)
+            mRF_pad = [zeros(nPadLen, size(mRF,2)); mRF];  % Replacement
 
             %%% Truncation or Zero-Padding (so that # of samples = RFInfo.nSample)
             nUpSample = nSample*nUpSampFactor;
@@ -252,7 +257,9 @@ function [stRcvData] = GenRFdata(stTrans, stTx, stScat, bPlot)
             if(size(mRF_pad,1) > nLastSamIdx)
                 mRF_trc = mRF_pad(nFirstSamIdx:nLastSamIdx,:);
             elseif(size(mRF_pad,1) < nLastSamIdx)
-                mRF_pad2 = padarray(mRF_pad,[nLastSamIdx-size(mRF_pad,1) 0],'post');
+                %%% Modified: replaced padarray with basic MATLAB (no Image Processing Toolbox)
+                % mRF_pad2 = padarray(mRF_pad,[nLastSamIdx-size(mRF_pad,1) 0],'post');  % Original
+                mRF_pad2 = [mRF_pad; zeros(nLastSamIdx-size(mRF_pad,1), size(mRF_pad,2))];  % Replacement
                 mRF_trc = mRF_pad2(nFirstSamIdx:nLastSamIdx,:);
             end
 
