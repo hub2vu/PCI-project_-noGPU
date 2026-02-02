@@ -33,10 +33,20 @@ nQiq = 2;
 nQph = 0;
 
 % GPU 사용 여부 확인
-bUseGPU = gpuDeviceCount > 0;
-if bUseGPU
-    gpuDevice(1);
-    disp('GPU detected. Using GPU acceleration.');
+bUseGPU = false;
+if gpuDeviceCount > 0
+    try
+        % CUDA 이후 버전 호환성 활성화 시도
+        parallel.gpu.enableCUDAForwardCompatibility(true);
+        gpuDevice(1);
+        bUseGPU = true;
+        disp('GPU detected. Using GPU acceleration (forward compatibility mode).');
+    catch ME
+        % GPU 사용 실패 시 CPU 모드로 전환
+        warning('GPU initialization failed: %s', ME.message);
+        disp('Falling back to CPU mode.');
+        bUseGPU = false;
+    end
 else
     disp('No GPU detected. Using CPU.');
 end
